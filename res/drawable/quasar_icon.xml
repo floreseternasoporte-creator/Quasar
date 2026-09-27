@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quasar 2.0 — Ícono de la app: núcleo brillante de quásar con chorros de energía, índigo sobre negro (diseño original) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp" android:height="96dp"
+    android:viewportWidth="96" android:viewportHeight="96">
+
+    <!-- fondo negro redondeado -->
+    <path
+        android:fillColor="#05060F"
+        android:pathData="M8,0 H88 Q96,0 96,8 V88 Q96,96 88,96 H8 Q0,96 0,88 V8 Q0,0 8,0 Z" />
+
+    <!-- halo exterior índigo -->
+    <path
+        android:fillColor="#6366F1"
+        android:fillAlpha="0.16"
+        android:pathData="M48,14 m-34,0 a34,34 0 1,0 68,0 a34,34 0 1,0 -68,0" />
+
+    <!-- chorro de energía superior (exterior índigo) -->
+    <path
+        android:fillColor="#6366F1"
+        android:fillAlpha="0.5"
+        android:pathData="M44,6 L52,6 L50,40 L46,40 Z" />
+    <!-- chorro de energía inferior (exterior índigo) -->
+    <path
+        android:fillColor="#6366F1"
+        android:fillAlpha="0.5"
+        android:pathData="M44,90 L52,90 L50,56 L46,56 Z" />
+    <!-- chorro superior (núcleo cian) -->
+    <path
+        android:fillColor="#22D3EE"
+        android:fillAlpha="0.85"
+        android:pathData="M46.5,10 L49.5,10 L48.8,40 L47.2,40 Z" />
+    <!-- chorro inferior (núcleo cian) -->
+    <path
+        android:fillColor="#22D3EE"
+        android:fillAlpha="0.85"
+        android:pathData="M46.5,86 L49.5,86 L48.8,56 L47.2,56 Z" />
+
+    <!-- disco de acreción inclinado (anillo exterior) -->
+    <group android:rotation="-18" android:pivotX="48" android:pivotY="48">
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#A5B4FC"
+            android:strokeWidth="3.5"
+            android:strokeAlpha="0.8"
+            android:pathData="M18,48 a30,11 0 1,0 60,0 a30,11 0 1,0 -60,0" />
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#22D3EE"
+            android:strokeWidth="2"
+            android:strokeAlpha="0.35"
+            android:pathData="M12,48 a36,14 0 1,0 72,0 a36,14 0 1,0 -72,0" />
+    </group>
+
+    <!-- núcleo brillante -->
+    <path
+        android:fillColor="#A5B4FC"
+        android:fillAlpha="0.45"
+        android:pathData="M48,36 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,41 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0" />
+</vector>

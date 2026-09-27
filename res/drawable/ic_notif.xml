@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quasar 1.1 — Ícono de notificación: silueta blanca (los smallIcon deben ser máscara alfa) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M12,2 a10,10 0 1,0 0.01,0 Z M12,4.5 a7.5,7.5 0 1,1 -0.01,0 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,9.8 m-2.2,0 a2.2,2.2 0 1,0 4.4,0 a2.2,2.2 0 1,0 -4.4,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18.6,5.9 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+</vector>

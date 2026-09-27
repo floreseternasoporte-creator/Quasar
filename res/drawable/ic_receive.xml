@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quasar 1.1 — Ícono RECIBIR: cápsula descendiendo con paracaídas y ondas de aterrizaje (diseño original DrexOS) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp" android:height="48dp"
+    android:viewportWidth="96" android:viewportHeight="96">
+    <!-- ondas de aterrizaje -->
+    <path
+        android:strokeColor="#22D3EE"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeAlpha="0.5"
+        android:pathData="M30,82 Q48,90 66,82" />
+    <path
+        android:strokeColor="#22D3EE"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeAlpha="0.28"
+        android:pathData="M24,88 Q48,98 72,88" />
+    <!-- líneas del paracaídas -->
+    <path
+        android:strokeColor="#A5B4FC"
+        android:strokeWidth="2"
+        android:pathData="M31,36 L43,56" />
+    <path
+        android:strokeColor="#A5B4FC"
+        android:strokeWidth="2"
+        android:pathData="M65,36 L53,56" />
+    <path
+        android:strokeColor="#A5B4FC"
+        android:strokeWidth="2"
+        android:pathData="M48,36 L48,54" />
+    <!-- campana del paracaídas -->
+    <path
+        android:fillColor="#6366F1"
+        android:pathData="M26,36 C26,21 36,12 48,12 C60,12 70,21 70,36 Z" />
+    <path
+        android:fillColor="#818CF8"
+        android:pathData="M26,36 C26,21 36,12 48,12 L48,36 Z" />
+    <path
+        android:fillColor="#4F46E5"
+        android:pathData="M44,13.5 C45.6,20 46.2,27 46.2,36 L49.8,36 C49.8,27 50.4,20 52,13.5 Z" />
+    <!-- cápsula -->
+    <path
+        android:fillColor="#E9EBF7"
+        android:pathData="M40,54 h16 a4,4 0 0,1 4,4 v5 a7,7 0 0,1 -7,7 h-10 a7,7 0 0,1 -7,-7 v-5 a4,4 0 0,1 4,-4 Z" />
+    <path
+        android:fillColor="#22D3EE"
+        android:pathData="M48,58.5 m-3.5,0 a3.5,3.5 0 1,0 7,0 a3.5,3.5 0 1,0 -7,0" />
+    <!-- líneas de velocidad laterales -->
+    <path
+        android:strokeColor="#6366F1"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeAlpha="0.4"
+        android:pathData="M20,46 q-5,8 0,16" />
+    <path
+        android:strokeColor="#6366F1"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeAlpha="0.4"
+        android:pathData="M76,46 q5,8 0,16" />
+</vector>

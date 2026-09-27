@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <com.drex.quasar.StarfieldView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- ESTADO: elegir archivos (solo modo enviar) -->
+    <LinearLayout
+        android:id="@+id/state_pick"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elige qué enviar"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btn_pick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_primary"
+            android:text="@string/pick_files"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:padding="16dp" />
+
+        <TextView
+            android:id="@+id/txt_pick_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text=""
+            android:textSize="14sp"
+            android:textColor="@color/gray" />
+
+        <ListView
+            android:id="@+id/list_files"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="8dp" />
+
+        <Button
+            android:id="@+id/btn_to_discover"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/glass_card"
+            android:text="@string/find_devices"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:padding="16dp"
+            android:enabled="false" />
+    </LinearLayout>
+
+    <!-- ESTADO: descubrimiento -->
+    <LinearLayout
+        android:id="@+id/state_discover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/txt_discover_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/searching"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/txt_discover_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/location_hint"
+            android:textSize="13sp"
+            android:textColor="@color/gray" />
+
+        <com.drex.quasar.RadarView
+            android:id="@+id/radar"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp" />
+
+        <LinearLayout
+            android:id="@+id/transport_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tab_wifi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="12dp"
+                android:background="@drawable/btn_primary"
+                android:text="Wi-Fi Direct"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tab_bt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="12dp"
+                android:background="@drawable/card"
+                android:text="Bluetooth"
+                android:textSize="15sp"
+                android:textColor="@color/gray" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/list_peers"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="12dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="8dp" />
+
+        <TextView
+            android:id="@+id/txt_no_peers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="@string/no_devices"
+            android:textSize="14sp"
+            android:textColor="@color/gray"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_cancel_discover"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/card"
+            android:text="@string/cancel"
+            android:textColor="@color/gray"
+            android:padding="14dp" />
+    </LinearLayout>
+
+    <!-- ESTADO: transferencia -->
+    <LinearLayout
+        android:id="@+id/state_transfer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="24dp"
+        android:visibility="gone">
+
+        <com.drex.quasar.ProgressRingView
+            android:id="@+id/ring"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="32dp" />
+
+        <TextView
+            android:id="@+id/txt_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="0 MB/s"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/cyan" />
+
+        <TextView
+            android:id="@+id/txt_current_file"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text=""
+            android:textSize="14sp"
+            android:textColor="@color/gray"
+            android:maxLines="2"
+            android:ellipsize="middle" />
+
+        <TextView
+            android:id="@+id/txt_peer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text=""
+            android:textSize="14sp"
+            android:textColor="@color/indigo_light" />
+
+        <Button
+            android:id="@+id/btn_cancel_transfer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/card"
+            android:text="@string/cancel"
+            android:textColor="@color/gray"
+            android:padding="14dp" />
+    </LinearLayout>
+
+    <!-- ESTADO: resultado -->
+    <LinearLayout
+        android:id="@+id/state_done"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <com.drex.quasar.SuccessBurstView
+            android:id="@+id/burst"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txt_done_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="✓"
+            android:textSize="90sp"
+            android:textColor="@color/green" />
+
+        <TextView
+            android:id="@+id/txt_done_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/transfer_done"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/txt_done_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text=""
+            android:textSize="15sp"
+            android:textColor="@color/gray" />
+
+        <Button
+            android:id="@+id/btn_done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/btn_primary"
+            android:text="@string/done"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:padding="16dp" />
+    </LinearLayout>
+
+</RelativeLayout>

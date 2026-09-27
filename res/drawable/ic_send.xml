@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quasar 1.1 — Ícono ENVIAR: cohete despegando con estela índigo (diseño original DrexOS) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp" android:height="48dp"
+    android:viewportWidth="96" android:viewportHeight="96">
+    <group
+        android:rotation="45"
+        android:pivotX="48"
+        android:pivotY="48">
+        <!-- estelas de movimiento -->
+        <path
+            android:strokeColor="#6366F1"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:strokeAlpha="0.55"
+            android:pathData="M31,70 L22,84" />
+        <path
+            android:strokeColor="#6366F1"
+            android:strokeWidth="3"
+            android:strokeLineCap="round"
+            android:strokeAlpha="0.35"
+            android:pathData="M39,74 L34,89" />
+        <path
+            android:strokeColor="#22D3EE"
+            android:strokeWidth="3"
+            android:strokeLineCap="round"
+            android:strokeAlpha="0.4"
+            android:pathData="M57,74 L62,89" />
+        <!-- llama del motor -->
+        <path
+            android:fillColor="#22D3EE"
+            android:fillAlpha="0.85"
+            android:pathData="M48,90 C43.5,81 41.5,74 41.5,65 L54.5,65 C54.5,74 52.5,81 48,90 Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.9"
+            android:pathData="M48,80 C45.8,75.5 45,71 45,66 L51,66 C51,71 50.2,75.5 48,80 Z" />
+        <!-- aletas -->
+        <path
+            android:fillColor="#4F46E5"
+            android:pathData="M42,50 L31,66 L42,62 Z" />
+        <path
+            android:fillColor="#4F46E5"
+            android:pathData="M54,50 L65,66 L54,62 Z" />
+        <!-- fuselaje -->
+        <path
+            android:fillColor="#E9EBF7"
+            android:pathData="M48,10 C53,18 55.5,26 55.5,36 L55.5,56 C55.5,60.5 52,63 48,63 C44,63 40.5,60.5 40.5,56 L40.5,36 C40.5,26 43,18 48,10 Z" />
+        <!-- cono -->
+        <path
+            android:fillColor="#6366F1"
+            android:pathData="M48,10 C53,18 55.5,26 55.5,34 L40.5,34 C40.5,26 43,18 48,10 Z" />
+        <!-- ventana -->
+        <path
+            android:fillColor="#22D3EE"
+            android:pathData="M48,40.5 m-5.5,0 a5.5,5.5 0 1,0 11,0 a5.5,5.5 0 1,0 -11,0" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.85"
+            android:pathData="M46.2,38.6 m-1.8,0 a1.8,1.8 0 1,0 3.6,0 a1.8,1.8 0 1,0 -3.6,0" />
+    </group>
+</vector>

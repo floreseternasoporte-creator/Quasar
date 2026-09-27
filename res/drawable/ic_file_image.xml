@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quasar 2.0 — íconos de tipo de archivo (diseños originales) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp" android:height="40dp"
+    android:viewportWidth="40" android:viewportHeight="40">
+    <path android:fillColor="#1A1440"
+        android:pathData="M6,4 H34 Q36,4 36,6 V34 Q36,36 34,36 H6 Q4,36 4,34 V6 Q4,4 6,4 Z" />
+    <path android:fillColor="#00000000" android:strokeColor="#A5B4FC"
+        android:strokeWidth="2" android:pathData="M10,28 L17,20 L23,26 L27,22 L32,28 Z" />
+    <path android:fillColor="#22D3EE" android:fillAlpha="0.9"
+        android:pathData="M26,10 m-3.4,0 a3.4,3.4 0 1,0 6.8,0 a3.4,3.4 0 1,0 -6.8,0" />
+</vector>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Quasar</string>
+    <string name="tagline">Rápido como un quásar</string>
+    <string name="send">ENVIAR</string>
+    <string name="receive">RECIBIR</string>
+    <string name="history">Historial</string>
+    <string name="tab_send">Enviar</string>
+    <string name="tab_receive">Recibir</string>
+    <string name="tab_history">Historial</string>
+    <string name="send_hero">Toca para elegir\nqué quieres enviar</string>
+    <string name="receive_hero">Toca para ponerte\nen modo recepción</string>
+    <string name="pick_files">Elegir archivos</string>
+    <string name="find_devices">Buscar dispositivos</string>
+    <string name="searching">Buscando dispositivos cercanos…</string>
+    <string name="waiting">Esperando conexión…</string>
+    <string name="waiting_hint">En el otro teléfono abre Quasar y toca ENVIAR</string>
+    <string name="cancel">Cancelar</string>
+    <string name="done">Listo</string>
+    <string name="transfer_done">¡Transferencia completa!</string>
+    <string name="transfer_failed">La transferencia falló</string>
+    <string name="retry">Reintentar</string>
+    <string name="wifi_direct">Wi-Fi Direct</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="fast_badge">RÁPIDO</string>
+    <string name="slow_badge">Respaldo</string>
+    <string name="no_devices">No se encontraron dispositivos.\nAsegúrate de que el otro teléfono tenga Quasar abierto.</string>
+    <string name="perm_title">Permisos necesarios</string>
+    <string name="perm_msg">Quasar necesita acceso a Wi-Fi, Bluetooth, ubicación y archivos para encontrar dispositivos cercanos y enviar archivos. Sin estos permisos no puede funcionar.</string>
+    <string name="perm_ok">Permitir</string>
+    <string name="location_hint">Tip: en algunos teléfonos debes tener la ubicación activada para que el Wi-Fi Direct funcione.</string>
+    <string name="preparing">Preparando archivos…</string>
+    <string name="connecting">Conectando…</string>
+    <string name="sent">Enviados</string>
+    <string name="received">Recibidos</string>
+    <string name="empty_history">Aún no hay transferencias</string>
+    <string name="saved_to">Guardado en Descargas/Quasar</string>
+    <string name="notif_channel">Transferencias</string>
+    <string name="notif_searching">Quasar: buscando dispositivos…</string>
+    <string name="notif_transfer">Quasar: transfiriendo…</string>
+    <string name="notif_done">Quasar: transferencia completa</string>
+    <string name="perm_denied_title">Permisos denegados</string>
+    <string name="perm_denied_msg">Sin estos permisos Quasar no puede encontrar dispositivos cercanos. Puedes activarlos cuando quieras en los ajustes de la app.</string>
+    <string name="open_settings">Abrir ajustes</string>
+    <string name="continue_anyway">Continuar</string>
+
+    <!-- Onboarding -->
+    <string name="skip">Omitir</string>
+    <string name="next">Siguiente</string>
+    <string name="start">Empezar</string>
+    <string name="ob1_title">Quasar</string>
+    <string name="ob1_text">Transfiere archivos entre Androids a la velocidad de la luz.</string>
+    <string name="ob2_title">Rapidísimo, sin internet</string>
+    <string name="ob2_text">Usa Wi-Fi Direct: decenas de MB/s sin router, sin datos y sin cables.</string>
+    <string name="ob3_title">Elige, toca y listo</string>
+    <string name="ob3_text">Selecciona fotos y videos con vista previa, toca el dispositivo cercano y vuela.</string>
+    <string name="ob4_title">Directo y privado</string>
+    <string name="ob4_text">Tus archivos van de teléfono a teléfono. Nada pasa por la nube.</string>
+
+    <!-- Explorador de archivos -->
+    <string name="browser_title">Elige qué enviar</string>
+    <string name="filter_photos">Fotos</string>
+    <string name="filter_videos">Videos</string>
+    <string name="filter_music">Música</string>
+    <string name="filter_docs">Documentos</string>
+    <string name="filter_all">Todo</string>
+    <string name="continue_btn">Continuar</string>
+    <string name="selected_count">%1$d elegidos</string>
+    <string name="loading_files">Cargando…</string>
+    <string name="no_files_here">No hay archivos aquí</string>
+</resources>

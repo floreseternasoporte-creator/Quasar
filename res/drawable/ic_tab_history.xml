@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quasar 2.0 — Ícono de pestaña Historial: reloj orbital índigo (diseño original) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="28dp" android:height="28dp"
+    android:viewportWidth="28" android:viewportHeight="28">
+    <!-- órbita -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#6366F1"
+        android:strokeWidth="2.2"
+        android:strokeAlpha="0.9"
+        android:pathData="M14,3 a11,11 0 1,0 0.1,0 Z" />
+    <!-- manecillas -->
+    <path
+        android:strokeColor="#A5B4FC"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:pathData="M14,8 L14,14 L18.5,16.5" />
+    <!-- punto central -->
+    <path
+        android:fillColor="#22D3EE"
+        android:pathData="M14,12.4 m-1.6,0 a1.6,1.6 0 1,0 3.2,0 a1.6,1.6 0 1,0 -3.2,0" />
+</vector>
