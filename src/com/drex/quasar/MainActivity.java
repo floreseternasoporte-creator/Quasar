@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -36,6 +35,9 @@ public class MainActivity extends Activity {
     private ImageView navSendIcon, navReceiveIcon, navHistoryIcon;
     private TextView navSendLabel, navReceiveLabel, navHistoryLabel;
     private int currentTab = -1;
+    private StarfieldView stars;
+    private View btnSendCard;
+    private boolean launching = false;
 
     private BaseAdapter historyAdapter;
     private List<HistoryStore.Entry> historyEntries = new ArrayList<>();
@@ -66,14 +68,16 @@ public class MainActivity extends Activity {
         navSendLabel = findViewById(R.id.nav_send_label);
         navReceiveLabel = findViewById(R.id.nav_receive_label);
         navHistoryLabel = findViewById(R.id.nav_history_label);
+        stars = findViewById(R.id.starfield);
+        btnSendCard = findViewById(R.id.btn_send);
 
-        pressFx(findViewById(R.id.btn_send));
-        pressFx(findViewById(R.id.btn_receive));
-        pressFx(navSend);
-        pressFx(navReceive);
-        pressFx(navHistory);
+        Cine.pressFx(btnSendCard);
+        Cine.pressFx(findViewById(R.id.btn_receive));
+        Cine.pressFx(navSend);
+        Cine.pressFx(navReceive);
+        Cine.pressFx(navHistory);
 
-        findViewById(R.id.btn_send).setOnClickListener(v -> openBrowser());
+        btnSendCard.setOnClickListener(v -> launchSend());
         findViewById(R.id.btn_receive).setOnClickListener(v -> openTransfer("receive"));
         navSend.setOnClickListener(v -> selectTab(0));
         navReceive.setOnClickListener(v -> selectTab(1));
@@ -87,6 +91,16 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        // si volvemos de la secuencia de lanzamiento, la tarjeta "aterriza" de nuevo
+        if (launching) {
+            launching = false;
+            btnSendCard.setTranslationY(0f);
+            btnSendCard.setAlpha(0f);
+            btnSendCard.setScaleX(0.96f);
+            btnSendCard.setScaleY(0.96f);
+            btnSendCard.animate().alpha(1f).scaleX(1f).scaleY(1f)
+                    .setDuration(460).setInterpolator(Cine.CINEMATIC).start();
+        }
         if (currentTab == 2) refreshHistory();
     }
 
@@ -99,10 +113,9 @@ public class MainActivity extends Activity {
         tabReceive.setVisibility(t == 1 ? View.VISIBLE : View.GONE);
         tabHistory.setVisibility(t == 2 ? View.VISIBLE : View.GONE);
         View shown = t == 0 ? tabSend : t == 1 ? tabReceive : tabHistory;
-        shown.setAlpha(0f);
-        shown.setTranslationY(24f);
-        shown.animate().alpha(1f).translationY(0f).setDuration(280)
-                .setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+        Cine.enterCine(shown, 30);
+        // parallax cinematográfico del fondo al cambiar de pestaña
+        stars.setParallax(t == 0 ? 0f : t == 1 ? -80f : 80f);
 
         paintNav(navSendIcon, navSendLabel, t == 0);
         paintNav(navReceiveIcon, navReceiveLabel, t == 1);
@@ -115,11 +128,24 @@ public class MainActivity extends Activity {
         icon.setAlpha(active ? 1f : 0.45f);
         label.setTextColor(active ? 0xFFA5B4FC : 0xFF9CA3AF);
         if (active) {
-            icon.setScaleX(0.7f);
-            icon.setScaleY(0.7f);
-            icon.animate().scaleX(1f).scaleY(1f).setDuration(260)
-                    .setInterpolator(new android.view.animation.OvershootInterpolator(2f)).start();
+            icon.animate().cancel();
+            icon.setScaleX(0.75f);
+            icon.setScaleY(0.75f);
+            icon.animate().scaleX(1f).scaleY(1f).setDuration(380)
+                    .setInterpolator(Cine.CINEMATIC).start();
         }
+    }
+
+    /** 2.1 — micro-secuencia de "lanzamiento" al pulsar Enviar. */
+    private void launchSend() {
+        if (launching) return;
+        launching = true;
+        btnSendCard.animate().scaleX(0.97f).scaleY(0.97f)
+                .setDuration(130).setInterpolator(Cine.EASE_OUT)
+                .withEndAction(() -> btnSendCard.animate()
+                        .translationY(-Cine.dp(btnSendCard, 170f)).alpha(0f)
+                        .setDuration(430).setInterpolator(Cine.EASE_IN)
+                        .withEndAction(this::openBrowser).start()).start();
     }
 
     // ---------------- historial (pestaña) ----------------
@@ -147,11 +173,13 @@ public class MainActivity extends Activity {
                 if (v == null) {
                     v = LayoutInflater.from(MainActivity.this)
                             .inflate(R.layout.item_history, parent, false);
+                    // 2.1: entrada cinematográfica escalonada
+                    v.animate().cancel();
                     v.setAlpha(0f);
-                    v.setTranslationX(48f);
-                    v.animate().alpha(1f).translationX(0f).setDuration(240)
-                            .setStartDelay(Math.min(p, 10) * 35L)
-                            .setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+                    v.setTranslationY(Cine.dp(v, 34));
+                    v.animate().alpha(1f).translationY(0f).setDuration(440)
+                            .setStartDelay(Math.min(p, 10) * 45L)
+                            .setInterpolator(Cine.CINEMATIC).start();
                 }
                 HistoryStore.Entry e = historyEntries.get(p);
                 TextView arrow = v.findViewById(R.id.hist_arrow);
@@ -207,19 +235,6 @@ public class MainActivity extends Activity {
                 overridePendingTransition(R.anim.slide_in_up, R.anim.hold);
             }
         }
-    }
-
-    private void pressFx(View v) {
-        v.setOnTouchListener((view, ev) -> {
-            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                view.animate().scaleX(0.94f).scaleY(0.94f).setDuration(110).start();
-            } else if (ev.getAction() == MotionEvent.ACTION_UP
-                    || ev.getAction() == MotionEvent.ACTION_CANCEL) {
-                view.animate().scaleX(1f).scaleY(1f).setDuration(340)
-                        .setInterpolator(new android.view.animation.OvershootInterpolator(2.4f)).start();
-            }
-            return false;
-        });
     }
 
     private void ensurePermissions() {

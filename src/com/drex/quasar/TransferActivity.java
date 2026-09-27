@@ -10,10 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -120,12 +118,12 @@ public class TransferActivity extends Activity {
                 finish();
             }
         });
-        // 1.1: rebote elástico al pulsar botones
-        pressFx(btnPick);
-        pressFx(btnToDiscover);
-        pressFx(btnCancelDiscover);
-        pressFx(btnCancelTransfer);
-        pressFx(btnDone);
+        // 2.1: presión cinematográfica en botones
+        Cine.pressFx(btnPick);
+        Cine.pressFx(btnToDiscover);
+        Cine.pressFx(btnCancelDiscover);
+        Cine.pressFx(btnCancelTransfer);
+        Cine.pressFx(btnDone);
 
         if (isSender) {
             showState(S_PICK);
@@ -290,7 +288,14 @@ public class TransferActivity extends Activity {
         stateDone.setVisibility(s == S_DONE ? View.VISIBLE : View.GONE);
         View v = s == S_PICK ? statePick : s == S_DISCOVER ? stateDiscover
                 : s == S_TRANSFER ? stateTransfer : stateDone;
-        v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.state_in)); // 1.1: transición cinematográfica
+        // 2.1: transición cinematográfica (fundido + desliz + leve escala)
+        v.animate().cancel();
+        v.setAlpha(0f);
+        v.setTranslationX(Cine.dp(v, 40));
+        v.setScaleX(0.985f);
+        v.setScaleY(0.985f);
+        v.animate().alpha(1f).translationX(0f).scaleX(1f).scaleY(1f)
+                .setDuration(420).setInterpolator(Cine.CINEMATIC).start();
         if (s == S_TRANSFER) ring.setProgressInstant(0);
     }
 
@@ -366,20 +371,6 @@ public class TransferActivity extends Activity {
         return sb.toString();
     }
 
-    /** 1.1: rebote elástico al pulsar un botón. */
-    private void pressFx(View v) {
-        v.setOnTouchListener((view, ev) -> {
-            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                view.animate().scaleX(0.94f).scaleY(0.94f).setDuration(110).start();
-            } else if (ev.getAction() == MotionEvent.ACTION_UP
-                    || ev.getAction() == MotionEvent.ACTION_CANCEL) {
-                view.animate().scaleX(1f).scaleY(1f).setDuration(340)
-                        .setInterpolator(new android.view.animation.OvershootInterpolator(2.4f)).start();
-            }
-            return false;
-        });
-    }
-
     private void showDone(boolean isError) {
         showState(S_DONE);
         if (isError) {
@@ -393,8 +384,8 @@ public class TransferActivity extends Activity {
             btnDone.setText(R.string.retry);
             txtDoneIcon.setScaleX(0.3f);
             txtDoneIcon.setScaleY(0.3f);
-            txtDoneIcon.animate().scaleX(1f).scaleY(1f).setDuration(450)
-                    .setInterpolator(new android.view.animation.OvershootInterpolator()).start();
+            txtDoneIcon.animate().scaleX(1f).scaleY(1f).setDuration(480)
+                    .setInterpolator(Cine.EASE_OUT).start();
         } else {
             txtDoneIcon.setVisibility(View.GONE);
             burst.setVisibility(View.VISIBLE);
@@ -426,12 +417,13 @@ public class TransferActivity extends Activity {
             if (v == null) {
                 v = LayoutInflater.from(TransferActivity.this)
                         .inflate(R.layout.item_file, parent, false);
-                // 1.1: entrada animada del archivo
+                // 2.1: entrada cinematográfica del archivo
+                v.animate().cancel();
                 v.setAlpha(0f);
-                v.setTranslationX(56f);
-                v.animate().alpha(1f).translationX(0f).setDuration(260)
-                        .setStartDelay(Math.min(p, 8) * 40L)
-                        .setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+                v.setTranslationY(Cine.dp(v, 30));
+                v.animate().alpha(1f).translationY(0f).setDuration(420)
+                        .setStartDelay(Math.min(p, 8) * 50L)
+                        .setInterpolator(Cine.CINEMATIC).start();
             }
             ((TextView) v.findViewById(R.id.file_name)).setText(rows.get(p)[0]);
             ((TextView) v.findViewById(R.id.file_size)).setText(rows.get(p)[1]);
@@ -440,6 +432,9 @@ public class TransferActivity extends Activity {
     }
 
     private class PeerAdapter extends BaseAdapter {
+        /** 2.1: peers ya vistos — la entrada elástica solo ocurre UNA vez por peer. */
+        private final java.util.HashSet<String> seenPeers = new java.util.HashSet<>();
+
         /** 1.1: solo notifica cuando la lista realmente cambió (no cada 300ms). */
         void setRowsIfChanged(String sig) {
             if (!sig.equals(lastPeerSig)) {
@@ -456,17 +451,39 @@ public class TransferActivity extends Activity {
         @Override public Object getItem(int p) { return null; }
         @Override public long getItemId(int p) { return p; }
 
+        private String peerKey(int p) {
+            if (ShareState.useBluetooth) {
+                return "B:" + ShareState.btPeers.get(p).getAddress();
+            }
+            return "W:" + ShareState.wifiPeers.get(p).deviceAddress;
+        }
+
         @Override
         public View getView(int p, View v, ViewGroup parent) {
-            if (v == null) {
+            boolean isNew = v == null;
+            if (isNew) {
                 v = LayoutInflater.from(TransferActivity.this)
                         .inflate(R.layout.item_peer, parent, false);
-                // 1.1: entrada animada del dispositivo descubierto
-                v.setAlpha(0f);
-                v.setTranslationX(64f);
-                v.animate().alpha(1f).translationX(0f).setDuration(300)
-                        .setStartDelay(Math.min(p, 8) * 55L)
-                        .setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+            }
+            String key = peerKey(p);
+            boolean firstSeen = seenPeers.add(key);
+            if (isNew) {
+                v.animate().cancel();
+                if (firstSeen) {
+                    // 2.1: dispositivo recién descubierto — entrada elástica única
+                    v.setAlpha(0f);
+                    v.setTranslationX(Cine.dp(v, 64));
+                    v.setScaleX(0.92f);
+                    v.setScaleY(0.92f);
+                    v.animate().alpha(1f).translationX(0f).scaleX(1f).scaleY(1f)
+                            .setDuration(520).setInterpolator(Cine.ELASTIC).start();
+                } else {
+                    // vista reciclada de un peer conocido: aparece limpio, sin saltos
+                    v.setAlpha(1f);
+                    v.setTranslationX(0f);
+                    v.setScaleX(1f);
+                    v.setScaleY(1f);
+                }
             }
             TextView name = v.findViewById(R.id.peer_name);
             TextView addr = v.findViewById(R.id.peer_addr);

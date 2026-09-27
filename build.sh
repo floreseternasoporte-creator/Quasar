@@ -1,5 +1,5 @@
 #!/bin/bash
-# Quasar 2.0 — pipeline de compilación (reusa Android SDK de DrexOS Launcher 2.0)
+# Quasar 2.1 — pipeline de compilación (reusa Android SDK de DrexOS Launcher 2.0)
 set -e
 cd "$(dirname "$0")"
 export PATH="$HOME/workspace/jdk17/bin:$PATH"
@@ -43,16 +43,16 @@ $BT/zipalign -f 4 $OUT/unsigned.apk $OUT/aligned.apk
 
 echo "== Firma =="
 $BT/apksigner sign --ks keystore/drexshare.keystore --ks-pass pass:android \
-  --key-pass pass:android --out Quasar-2.0-unsigned.apk $OUT/aligned.apk 2>/dev/null || \
+  --key-pass pass:android --out Quasar-2.1-unsigned.apk $OUT/aligned.apk 2>/dev/null || \
 $BT/apksigner sign --ks keystore/drexshare.keystore --ks-pass pass:android \
   --ks-key-alias drexshare --key-pass pass:android \
-  --out Quasar-2.0-unsigned.apk $OUT/aligned.apk
+  --out Quasar-2.1-unsigned.apk $OUT/aligned.apk
 
 echo "== Verificación =="
-$BT/apksigner verify --print-certs Quasar-2.0-unsigned.apk | head -5
-$BT/aapt dump badging Quasar-2.0-unsigned.apk | head -8
+$BT/apksigner verify --print-certs Quasar-2.1-unsigned.apk | head -5
+$BT/aapt dump badging Quasar-2.1-unsigned.apk | head -8
 
 mkdir -p ~/workspace/your_files
-cp Quasar-2.0-unsigned.apk ~/workspace/your_files/Quasar-2.0.apk
-ls -lh ~/workspace/your_files/Quasar-2.0.apk
+cp Quasar-2.1-unsigned.apk ~/workspace/your_files/Quasar-2.1.apk
+ls -lh ~/workspace/your_files/Quasar-2.1.apk
 echo "LISTO"

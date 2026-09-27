@@ -12,7 +12,6 @@ import android.provider.MediaStore;
 import android.util.LruCache;
 import android.util.Size;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -95,7 +94,7 @@ public class FileBrowserActivity extends Activity {
             finish();
             overridePendingTransition(R.anim.hold, R.anim.slide_out_down);
         });
-        pressFx(btnContinue);
+        Cine.pressFx(btnContinue);
 
         setTab(TAB_PHOTOS);
     }
@@ -107,8 +106,19 @@ public class FileBrowserActivity extends Activity {
             boolean on = i == t;
             filters[i].setBackgroundResource(on ? R.drawable.btn_primary : R.drawable.card);
             filters[i].setTextColor(on ? 0xFFFFFFFF : 0xFF9CA3AF);
+            // 2.1: el filtro activo respira con easing cinematográfico
+            if (on) {
+                filters[i].animate().cancel();
+                filters[i].setScaleX(0.92f);
+                filters[i].setScaleY(0.92f);
+                filters[i].animate().scaleX(1f).scaleY(1f).setDuration(380)
+                        .setInterpolator(Cine.CINEMATIC).start();
+            }
         }
-        loadItems();
+        // 2.1: la rejilla se funde al cambiar de filtro
+        grid.animate().cancel();
+        grid.animate().alpha(0f).setDuration(140).setInterpolator(Cine.EASE_OUT)
+                .withEndAction(this::loadItems).start();
     }
 
     private void toggleSelect(int pos, View cell) {
@@ -127,8 +137,8 @@ public class FileBrowserActivity extends Activity {
             check.setVisibility(View.VISIBLE);
             check.setScaleX(0.3f);
             check.setScaleY(0.3f);
-            check.animate().scaleX(1f).scaleY(1f).setDuration(300)
-                    .setInterpolator(new android.view.animation.OvershootInterpolator(2.2f)).start();
+            check.animate().scaleX(1f).scaleY(1f).setDuration(340)
+                    .setInterpolator(Cine.ELASTIC).start();
             cell.animate().scaleX(0.94f).scaleY(0.94f).setDuration(160).start();
         }
         updateCounter();
@@ -144,26 +154,20 @@ public class FileBrowserActivity extends Activity {
             txtSelected.setText(getString(R.string.selected_count, n));
             txtSelected.setTextColor(0xFFFFFFFF);
             btnContinue.setAlpha(1f);
-            btnContinue.animate().scaleX(1.06f).scaleY(1.06f).setDuration(120)
+            // 2.1: pulso cinematográfico (acento puntual, sin rebote de juguete)
+            btnContinue.animate().cancel();
+            btnContinue.animate().scaleX(1.05f).scaleY(1.05f).setDuration(140)
+                    .setInterpolator(Cine.EASE_OUT)
                     .withEndAction(() -> btnContinue.animate().scaleX(1f).scaleY(1f)
-                            .setDuration(160).start()).start();
+                            .setDuration(300).setInterpolator(Cine.CINEMATIC).start()).start();
         }
     }
 
-    private void pressFx(View v) {
-        v.setOnTouchListener((view, ev) -> {
-            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                view.animate().scaleX(0.94f).scaleY(0.94f).setDuration(110).start();
-            } else if (ev.getAction() == MotionEvent.ACTION_UP
-                    || ev.getAction() == MotionEvent.ACTION_CANCEL) {
-                view.animate().scaleX(1f).scaleY(1f).setDuration(300)
-                        .setInterpolator(new android.view.animation.OvershootInterpolator(2.2f)).start();
-            }
-            return false;
-        });
-    }
-
     // ---------------- carga de archivos ----------------
+
+    /** 2.1: instante de la carga actual — solo las celdas de los primeros
+     * 700ms reciben entrada escalonada (las recicladas aparecen limpias). */
+    private long loadGenMs = 0;
 
     private void loadItems() {
         txtLoading.setVisibility(View.VISIBLE);
@@ -175,10 +179,15 @@ public class FileBrowserActivity extends Activity {
             runOnUiThread(() -> {
                 items.addAll(found);
                 thumbCache.evictAll();
+                loadGenMs = android.os.SystemClock.uptimeMillis();
                 adapter.notifyDataSetChanged();
                 txtLoading.setVisibility(View.GONE);
                 txtEmpty.setVisibility(items.isEmpty() ? View.VISIBLE : View.GONE);
                 updateCounter();
+                // la rejilla regresa con fundido cinematográfico
+                grid.animate().cancel();
+                grid.animate().alpha(1f).setDuration(320)
+                        .setInterpolator(Cine.CINEMATIC).start();
             });
         }).start();
     }
@@ -351,9 +360,21 @@ public class FileBrowserActivity extends Activity {
 
         @Override
         public View getView(int p, View v, ViewGroup parent) {
-            if (v == null) {
+            boolean isNew = v == null;
+            if (isNew) {
                 v = LayoutInflater.from(FileBrowserActivity.this)
                         .inflate(R.layout.item_media, parent, false);
+                // 2.1: entrada escalonada solo justo después de cargar
+                long age = android.os.SystemClock.uptimeMillis() - loadGenMs;
+                if (age < 700) {
+                    v.animate().cancel();
+                    v.setAlpha(0f);
+                    v.setScaleX(0.9f);
+                    v.setScaleY(0.9f);
+                    v.animate().alpha(1f).scaleX(1f).scaleY(1f)
+                            .setStartDelay((p % 15) * 30L).setDuration(400)
+                            .setInterpolator(Cine.CINEMATIC).start();
+                }
             }
             MediaItem m = items.get(p);
             ImageView thumb = v.findViewById(R.id.media_thumb);

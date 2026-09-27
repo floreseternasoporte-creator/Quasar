@@ -5,6 +5,7 @@
     android:background="@color/bg">
 
     <com.drex.quasar.StarfieldView
+        android:id="@+id/ob_stars"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
