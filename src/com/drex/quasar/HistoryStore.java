@@ -51,6 +51,14 @@ public class HistoryStore {
         }
     }
 
+    public static synchronized void clear(Context ctx) {
+        try {
+            File f = file(ctx);
+            if (f.exists()) f.delete();
+        } catch (Exception ignored) {
+        }
+    }
+
     public static synchronized List<Entry> load(Context ctx) {
         List<Entry> out = new ArrayList<>();
         try {

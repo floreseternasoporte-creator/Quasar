@@ -79,6 +79,12 @@ public class MainActivity extends Activity {
 
         btnSendCard.setOnClickListener(v -> launchSend());
         findViewById(R.id.btn_receive).setOnClickListener(v -> openTransfer("receive"));
+        View btnSettings = findViewById(R.id.btn_settings);
+        Cine.pressFx(btnSettings);
+        btnSettings.setOnClickListener(v -> {
+            startActivity(new Intent(this, SettingsActivity.class));
+            overridePendingTransition(R.anim.slide_in_up, R.anim.hold);
+        });
         navSend.setOnClickListener(v -> selectTab(0));
         navReceive.setOnClickListener(v -> selectTab(1));
         navHistory.setOnClickListener(v -> selectTab(2));
@@ -202,7 +208,7 @@ public class MainActivity extends Activity {
     private void refreshHistory() {
         historyEntries = HistoryStore.load(this);
         historyAdapter.notifyDataSetChanged();
-        findViewById(R.id.txt_empty).setVisibility(
+        findViewById(R.id.empty_history_box).setVisibility(
                 historyEntries.isEmpty() ? View.VISIBLE : View.GONE);
     }
 

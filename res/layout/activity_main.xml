@@ -174,27 +174,82 @@
                 android:textStyle="bold"
                 android:textColor="@color/white" />
 
-            <ListView
-                android:id="@+id/list_history"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/history_sub"
+                android:textSize="11sp"
+                android:letterSpacing="0.22"
+                android:textColor="#22D3EE" />
+
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_marginTop="16dp"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="8dp" />
+                android:layout_marginTop="16dp">
 
-            <TextView
-                android:id="@+id/txt_empty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:gravity="center"
-                android:text="@string/empty_history"
-                android:textSize="15sp"
-                android:textColor="@color/gray"
-                android:visibility="gone" />
+                <ListView
+                    android:id="@+id/list_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="8dp"
+                    android:scrollbars="none"
+                    android:clipToPadding="false" />
+
+                <!-- Estado vacío: centrado, con imagen -->
+                <LinearLayout
+                    android:id="@+id/empty_history_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:src="@drawable/img_history_empty" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="@string/empty_history"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="@string/empty_history_sub"
+                        android:textSize="13sp"
+                        android:textColor="@color/gray" />
+                </LinearLayout>
+            </FrameLayout>
         </LinearLayout>
     </FrameLayout>
+
+    <!-- Botón de ajustes: flotante arriba a la derecha, estilo SpaceX -->
+    <ImageView
+        android:id="@+id/btn_settings"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:padding="13dp"
+        android:src="@drawable/ic_settings"
+        android:alpha="0.9"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="@string/settings_title" />
 
     <!-- Barra de navegación inferior -->
     <LinearLayout
