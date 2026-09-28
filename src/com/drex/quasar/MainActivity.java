@@ -136,7 +136,9 @@ public class MainActivity extends Activity {
         }
     }
 
-    /** 2.1 — micro-secuencia de "lanzamiento" al pulsar Enviar. */
+    /** 2.2 — micro-secuencia de "lanzamiento" al pulsar Enviar.
+     * La galería se abre por tiempo (postDelayed) y NO encadenada al final de
+     * la animación: si el animator se cancela o se reutiliza, igual abre. */
     private void launchSend() {
         if (launching) return;
         launching = true;
@@ -144,8 +146,8 @@ public class MainActivity extends Activity {
                 .setDuration(130).setInterpolator(Cine.EASE_OUT)
                 .withEndAction(() -> btnSendCard.animate()
                         .translationY(-Cine.dp(btnSendCard, 170f)).alpha(0f)
-                        .setDuration(430).setInterpolator(Cine.EASE_IN)
-                        .withEndAction(this::openBrowser).start()).start();
+                        .setDuration(430).setInterpolator(Cine.EASE_IN).start()).start();
+        btnSendCard.postDelayed(this::openBrowser, 620);
     }
 
     // ---------------- historial (pestaña) ----------------
@@ -207,6 +209,7 @@ public class MainActivity extends Activity {
     // ---------------- flujos ----------------
 
     private void openBrowser() {
+        if (!launching) return; // ya se abrió, o se volvió y se tocó de nuevo
         startActivityForResult(new Intent(this, FileBrowserActivity.class), REQ_BROWSE);
         overridePendingTransition(R.anim.slide_in_up, R.anim.hold);
     }

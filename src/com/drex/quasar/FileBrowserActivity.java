@@ -50,6 +50,7 @@ public class FileBrowserActivity extends Activity {
     private MediaAdapter adapter;
     private GridView grid;
     private TextView txtSelected, txtEmpty, txtLoading, btnContinue;
+    private View emptyBox;
     private TextView[] filters;
 
     private final LruCache<String, Bitmap> thumbCache = new LruCache<String, Bitmap>(48) {
@@ -70,6 +71,19 @@ public class FileBrowserActivity extends Activity {
         txtEmpty = findViewById(R.id.txt_empty_files);
         txtLoading = findViewById(R.id.txt_loading);
         btnContinue = findViewById(R.id.btn_continue);
+        emptyBox = findViewById(R.id.empty_box);
+
+        // 2.2: si la galería sale vacía por acceso parcial, atajo a ajustes
+        View btnSettings = findViewById(R.id.btn_empty_settings);
+        Cine.pressFx(btnSettings);
+        btnSettings.setOnClickListener(v -> {
+            try {
+                Intent i = new Intent(
+                        android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:" + getPackageName()));
+                startActivity(i);
+            } catch (Exception ignored) {}
+        });
 
         filters = new TextView[]{
                 findViewById(R.id.filter_photos), findViewById(R.id.filter_videos),
@@ -171,7 +185,7 @@ public class FileBrowserActivity extends Activity {
 
     private void loadItems() {
         txtLoading.setVisibility(View.VISIBLE);
-        txtEmpty.setVisibility(View.GONE);
+        emptyBox.setVisibility(View.GONE);
         items.clear();
         adapter.notifyDataSetChanged();
         new Thread(() -> {
@@ -182,7 +196,7 @@ public class FileBrowserActivity extends Activity {
                 loadGenMs = android.os.SystemClock.uptimeMillis();
                 adapter.notifyDataSetChanged();
                 txtLoading.setVisibility(View.GONE);
-                txtEmpty.setVisibility(items.isEmpty() ? View.VISIBLE : View.GONE);
+                emptyBox.setVisibility(items.isEmpty() ? View.VISIBLE : View.GONE);
                 updateCounter();
                 // la rejilla regresa con fundido cinematográfico
                 grid.animate().cancel();
@@ -228,14 +242,16 @@ public class FileBrowserActivity extends Activity {
                 MediaStore.MediaColumns.DATE_MODIFIED};
         Cursor c = null;
         try {
+            // 2.2: sin LIMIT dentro del sortOrder (algunos fabricantes lo rechazan
+            // y la galería quedaba vacía); el tope se aplica en Java.
             c = getContentResolver().query(base, proj, null, null,
-                    MediaStore.MediaColumns.DATE_MODIFIED + " DESC LIMIT 400");
+                    MediaStore.MediaColumns.DATE_MODIFIED + " DESC");
             if (c == null) return;
             int iId = c.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
             int iName = c.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
             int iSize = c.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE);
             int iDate = c.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_MODIFIED);
-            while (c.moveToNext()) {
+            while (c.moveToNext() && out.size() < 400) {
                 MediaItem m = new MediaItem();
                 long id = c.getLong(iId);
                 m.uri = ContentUris.withAppendedId(base, id);
@@ -271,14 +287,15 @@ public class FileBrowserActivity extends Activity {
                 + "'application/vnd.android.package-archive','application/epub+zip')";
         Cursor c = null;
         try {
+            // 2.2: sin LIMIT dentro del sortOrder; el tope se aplica en Java.
             c = getContentResolver().query(base, proj, sel, null,
-                    MediaStore.MediaColumns.DATE_MODIFIED + " DESC LIMIT 400");
+                    MediaStore.MediaColumns.DATE_MODIFIED + " DESC");
             if (c == null) return;
             int iId = c.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
             int iName = c.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
             int iSize = c.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE);
             int iDate = c.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_MODIFIED);
-            while (c.moveToNext()) {
+            while (c.moveToNext() && out.size() < 400) {
                 MediaItem m = new MediaItem();
                 long id = c.getLong(iId);
                 m.uri = ContentUris.withAppendedId(base, id);

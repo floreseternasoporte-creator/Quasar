@@ -68,4 +68,5 @@
     <string name="selected_count">%1$d elegidos</string>
     <string name="loading_files">Cargando…</string>
     <string name="no_files_here">No hay archivos aquí</string>
+    <string name="empty_gallery_hint">Si al permitir elegiste «Seleccionar fotos», Quasar solo ve esas. Para ver toda tu galería, abre los ajustes y cambia el permiso a «Permitir todo».</string>
 </resources>
