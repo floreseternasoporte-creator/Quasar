@@ -157,6 +157,22 @@ public class TransferActivity extends Activity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        // 2.3: pausar radar a 60fps y el sondeo de estado en segundo plano
+        if (radar != null) radar.setRunning(false);
+        pollHandler.removeCallbacks(poll);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (radar != null) radar.setRunning(true);
+        pollHandler.removeCallbacks(poll);
+        pollHandler.post(poll);
+    }
+
+    @Override
     public void onBackPressed() {
         if (ShareState.phase == ShareState.Phase.TRANSFERRING) {
             finish(); // la transferencia sigue en segundo plano

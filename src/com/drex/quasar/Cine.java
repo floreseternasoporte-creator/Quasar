@@ -39,6 +39,7 @@ public final class Cine {
 
     /** Presión cinematográfica: hunde suave, suelta con peso. */
     public static void pressFx(final View v) {
+        if (v == null) return; // 2.3: blindaje defensivo
         v.setOnTouchListener((view, ev) -> {
             int a = ev.getAction();
             if (a == MotionEvent.ACTION_DOWN) {

@@ -95,8 +95,17 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        // 2.3: pausar el fondo a 60fps mientras otra pantalla está encima
+        if (stars != null) stars.setRunning(false);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        // 2.3: reanudar el fondo estrellado
+        if (stars != null) stars.setRunning(true);
         // si volvemos de la secuencia de lanzamiento, la tarjeta "aterriza" de nuevo
         if (launching) {
             launching = false;

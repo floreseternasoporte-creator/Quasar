@@ -149,6 +149,19 @@ public class RadarView extends View implements Choreographer.FrameCallback {
     }
 
     // ---- ciclo de vida 60fps ----
+    /** 2.3: la activity puede pausar el radar cuando va a segundo plano. */
+    public void setRunning(boolean want) {
+        want = want && getVisibility() == VISIBLE && isAttachedToWindow();
+        if (want == running) return;
+        running = want;
+        if (want) {
+            lastMs = 0;
+            Choreographer.getInstance().postFrameCallback(this);
+        } else {
+            Choreographer.getInstance().removeFrameCallback(this);
+        }
+    }
+
     @Override protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         running = true;

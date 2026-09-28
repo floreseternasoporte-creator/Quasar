@@ -53,12 +53,20 @@ public class FileBrowserActivity extends Activity {
     private View emptyBox;
     private TextView[] filters;
 
-    private final LruCache<String, Bitmap> thumbCache = new LruCache<String, Bitmap>(48) {
+    // 2.3: caché dimensionada a 1/16 de la memoria máxima. ANTES era de
+    // solo 48KB y cada miniatura de 192px pesaba ~147KB: la caché NUNCA
+    // retenía nada y cada scroll recargaba todas las miniaturas.
+    private final LruCache<String, Bitmap> thumbCache = new LruCache<String, Bitmap>(thumbCacheKb()) {
         @Override
         protected int sizeOf(String k, Bitmap b) {
             return b.getByteCount() / 1024;
         }
     };
+
+    private static int thumbCacheKb() {
+        long maxKb = Runtime.getRuntime().maxMemory() / 1024;
+        return (int) Math.max(4 * 1024, maxKb / 16);
+    }
     private final ExecutorService thumbPool = Executors.newFixedThreadPool(3);
 
     @Override
@@ -183,16 +191,23 @@ public class FileBrowserActivity extends Activity {
      * 700ms reciben entrada escalonada (las recicladas aparecen limpias). */
     private long loadGenMs = 0;
 
+    /** 2.3: generación de carga — si el usuario cambia de pestaña rápido,
+     * solo la última consulta aplica sus resultados. */
+    private int loadGen = 0;
+
     private void loadItems() {
         txtLoading.setVisibility(View.VISIBLE);
         emptyBox.setVisibility(View.GONE);
         items.clear();
         adapter.notifyDataSetChanged();
+        final int gen = ++loadGen;
         new Thread(() -> {
             List<MediaItem> found = queryTab(tab);
             runOnUiThread(() -> {
+                if (gen != loadGen) return; // una carga más nueva ya ganó
                 items.addAll(found);
-                thumbCache.evictAll();
+                // 2.3: ya no se vacía la caché al cambiar de pestaña;
+                // volver atrás ahora es instantáneo.
                 loadGenMs = android.os.SystemClock.uptimeMillis();
                 adapter.notifyDataSetChanged();
                 txtLoading.setVisibility(View.GONE);
@@ -330,7 +345,8 @@ public class FileBrowserActivity extends Activity {
             Bitmap b = null;
             try {
                 if (Build.VERSION.SDK_INT >= 29) {
-                    b = getContentResolver().loadThumbnail(m.uri, new Size(192, 192), null);
+                    // 2.3: 384px — nítido hasta xxxhdpi en celdas de 3 columnas
+                    b = getContentResolver().loadThumbnail(m.uri, new Size(384, 384), null);
                 } else {
                     long id = ContentUris.parseId(m.uri);
                     if (kind == 0) {

@@ -53,6 +53,20 @@ public class StarfieldView extends View implements Choreographer.FrameCallback {
         parallaxTarget = px;
     }
 
+    /** 2.3: la activity pausa el fondo a 60fps cuando va a segundo plano
+     * (ahorra batería mientras la galería/ajustes están encima). */
+    public void setRunning(boolean want) {
+        want = want && getVisibility() == VISIBLE && isAttachedToWindow();
+        if (want == running) return;
+        running = want;
+        if (want) {
+            lastMs = 0;
+            Choreographer.getInstance().postFrameCallback(this);
+        } else {
+            Choreographer.getInstance().removeFrameCallback(this);
+        }
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int ow, int oh) {
         super.onSizeChanged(w, h, ow, oh);

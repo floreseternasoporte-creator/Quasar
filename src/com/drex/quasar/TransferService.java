@@ -59,6 +59,9 @@ public class TransferService extends Service {
     private final AtomicBoolean transferStarted = new AtomicBoolean(false);
     private final AtomicBoolean connecting = new AtomicBoolean(false); // 1.1: evita toques dobles y pisos entre transportes
     private Thread workThread;
+    // 2.3: locks para que el Wi-Fi no se duerma a mitad de una transferencia larga
+    private android.net.wifi.WifiManager.WifiLock wifiLock;
+    private android.os.PowerManager.WakeLock wakeLock;
 
     @Override
     public void onCreate() {
@@ -120,6 +123,41 @@ public class TransferService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) { return null; }
+
+    // ------------------------- locks de transferencia -------------------------
+    /** 2.3: evita que el Wi-Fi/CPU se duerman durante transferencias largas. */
+    private void acquireLocks() {
+        try {
+            if (wifiLock == null) {
+                android.net.wifi.WifiManager wm =
+                        (android.net.wifi.WifiManager) getApplicationContext()
+                                .getSystemService(Context.WIFI_SERVICE);
+                wifiLock = wm.createWifiLock(
+                        android.net.wifi.WifiManager.WIFI_MODE_FULL_HIGH_PERF, "Quasar:xfer");
+                wifiLock.setReferenceCounted(false);
+            }
+            if (!wifiLock.isHeld()) wifiLock.acquire();
+        } catch (Exception ignored) {}
+        try {
+            if (wakeLock == null) {
+                android.os.PowerManager pm =
+                        (android.os.PowerManager) getSystemService(Context.POWER_SERVICE);
+                wakeLock = pm.newWakeLock(
+                        android.os.PowerManager.PARTIAL_WAKE_LOCK, "Quasar:xfer");
+                wakeLock.setReferenceCounted(false);
+            }
+            if (!wakeLock.isHeld()) wakeLock.acquire(30 * 60 * 1000L); // tope 30 min
+        } catch (Exception ignored) {}
+    }
+
+    private void releaseLocks() {
+        try {
+            if (wifiLock != null && wifiLock.isHeld()) wifiLock.release();
+        } catch (Exception ignored) {}
+        try {
+            if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
+        } catch (Exception ignored) {}
+    }
 
     // ------------------------- notificación -------------------------
     private Notification buildNotif(String text, int progress) {
@@ -556,6 +594,7 @@ public class TransferService extends Service {
     private void runSend(List<TransferEngine.Chan> chans) {
         ShareState.phase = ShareState.Phase.TRANSFERRING;
         ShareState.transferStartMs = SystemClock.elapsedRealtime();
+        acquireLocks(); // 2.3: el Wi-Fi no se duerme a mitad del envío
         try {
             TransferEngine.send(chans, ShareState.sendFiles, makeProgress());
             for (ShareState.SendFile f : ShareState.sendFiles)
@@ -572,6 +611,7 @@ public class TransferService extends Service {
     private void runReceive(List<TransferEngine.Chan> chans) {
         ShareState.phase = ShareState.Phase.TRANSFERRING;
         ShareState.transferStartMs = SystemClock.elapsedRealtime();
+        acquireLocks(); // 2.3: el Wi-Fi no se duerme a mitad de la recepción
         final List<String[]> receivedMeta = new ArrayList<>();
         try {
             TransferEngine.receive(chans, new TransferEngine.TargetFactory() {
@@ -598,6 +638,7 @@ public class TransferService extends Service {
     }
 
     private void onTransferSuccess() {
+        releaseLocks(); // 2.3
         ShareState.phase = ShareState.Phase.DONE;
         ShareState.transferEndMs = SystemClock.elapsedRealtime();
         ShareState.speedMBs = 0;
@@ -614,6 +655,7 @@ public class TransferService extends Service {
     }
 
     private void setError(String msg) {
+        releaseLocks(); // 2.3
         connecting.set(false); // 1.1: libera para un reintento
         ShareState.phase = ShareState.Phase.ERROR;
         ShareState.error = msg;
@@ -669,6 +711,7 @@ public class TransferService extends Service {
         } catch (Exception ignored) {}
         btReceiver = null;
         if (workThread != null) workThread.interrupt();
+        releaseLocks(); // 2.3: nunca dejar un lock colgado
         try { stopForeground(true); } catch (Exception ignored) {}
     }
 }
