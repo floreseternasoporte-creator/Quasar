@@ -37,9 +37,10 @@
             android:gravity="center"
             android:padding="40dp">
             <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/quasar_icon" />
+                android:layout_width="240dp"
+                android:layout_height="160dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_ob1" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,9 +70,10 @@
             android:padding="40dp"
             android:visibility="gone">
             <ImageView
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:src="@drawable/ic_tab_send" />
+                android:layout_width="240dp"
+                android:layout_height="160dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_ob2" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -101,9 +103,10 @@
             android:padding="40dp"
             android:visibility="gone">
             <ImageView
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:src="@drawable/ic_file_image" />
+                android:layout_width="240dp"
+                android:layout_height="160dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_ob3" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -133,9 +136,10 @@
             android:padding="40dp"
             android:visibility="gone">
             <ImageView
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:src="@drawable/ic_tab_receive" />
+                android:layout_width="240dp"
+                android:layout_height="160dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_ob4" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
